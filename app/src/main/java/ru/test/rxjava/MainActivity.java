@@ -1,16 +1,16 @@
 package ru.test.rxjava;
 
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.EditText;
-
-import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
+import static android.os.AsyncTask.execute;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MyLog";
@@ -24,15 +24,22 @@ public class MainActivity extends AppCompatActivity {
         Observable.just(1, 2, 4, 8, 16, 32, 64)
                 .filter(integer -> integer >= 13)
                 .map(String::valueOf)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(value -> Log.i(TAG, value));
 
+
         //For
-        int[] items = new int[]{1, 2, 4, 8, 16, 32, 64};
-        for (int value : items) {
-            if (value >= 13) {
-                String s = String.valueOf(value);
-                Log.i(TAG, s);
+        Handler HANDLER = new Handler();
+
+        execute(() -> {
+            int[] items = new int[]{1, 2, 4, 8, 16, 32, 64};
+            for (int value : items) {
+                if (value >= 13) {
+                    String s = String.valueOf(value);
+                    HANDLER.post(() -> Log.i(TAG, s));
+                }
             }
-        }
+        });
     }
 }
