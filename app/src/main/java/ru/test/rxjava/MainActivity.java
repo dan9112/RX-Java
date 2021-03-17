@@ -15,19 +15,21 @@ import io.reactivex.rxjava3.functions.Action;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MyLog";
 
-    //private EditText edText;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable<Integer> observable = Observable.just(1, 2, 4);
+        //RxJava
+        Observable.just(1, 2, 4, 8, 16, 32, 64)
+                .map(String::valueOf)
+                .subscribe(value -> Log.i(TAG, value));
 
-        //edText = findViewById(R.id.edText);
-
-        observable.subscribe(integer -> Log.i(TAG, String.valueOf(integer)),
-                throwable -> Log.i(TAG, "Error!"),
-                () -> Log.i(TAG, "Completed!"));
+        //For
+        int[] items = new int[]{1, 2, 4, 8, 16, 32, 64};
+        for (int value : items) {
+            String s = String.valueOf(value);
+            Log.i(TAG, s);
+        }
     }
 }
