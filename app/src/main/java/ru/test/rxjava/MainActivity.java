@@ -22,14 +22,17 @@ public class MainActivity extends AppCompatActivity {
 
         //RxJava
         Observable.just(1, 2, 4, 8, 16, 32, 64)
+                .filter(integer -> integer >= 13)
                 .map(String::valueOf)
                 .subscribe(value -> Log.i(TAG, value));
 
         //For
         int[] items = new int[]{1, 2, 4, 8, 16, 32, 64};
         for (int value : items) {
-            String s = String.valueOf(value);
-            Log.i(TAG, s);
+            if (value >= 13) {
+                String s = String.valueOf(value);
+                Log.i(TAG, s);
+            }
         }
     }
 }
